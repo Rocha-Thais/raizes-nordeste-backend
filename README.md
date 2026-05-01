@@ -1,42 +1,20 @@
-# Raízes do Nordeste - Backend
+# Raizes do Nordeste - Backend
 
-Trabalho final da disciplina Eletiva IV - Projeto Multidisciplinar.
+Trabalho final da disciplina Eletiva IV.
 
-**Autora:** Thais Rocha
-
----
+Autora: Thais Rocha
 
 ## Status
-✅ API funcional
-
-## Tecnologias
-- Node.js
-- Express
-- SQLite
+API funcionando
 
 ## Como executar
 
-```bash
-git clone https://github.com/Rocha-Thais/raizes-nordeste-backend.git
-cd raizes-nordeste-backend/backend/backend
-npm install
-node app.js
+1. Entre na pasta backend/backend
+2. npm install
+3. node app.js
 
-Servidor: http://localhost:8080
-
-Endpoints principais
-Método	Rota
-GET	/api/unidades
-GET	/api/cardapio?unidadeId=1
-POST	/api/pedidos
-POST	/api/pagamentos/mock
-
-Documentação
-
-Requisitos
-
-Endpoints
-
-Testes
-
-Diagramas
+## Endpoints
+- GET /api/unidades
+- GET /api/cardapio?unidadeId=1
+- POST /api/pedidos
+- POST /api/pagamentos/mock
