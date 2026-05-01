@@ -4,8 +4,6 @@ Trabalho final da disciplina Eletiva IV - Projeto Multidisciplinar.
 
 **Autora:** Thais Rocha
 
----
-
 ## Status
 ✅ API funcional
 
@@ -30,9 +28,7 @@ GET	/api/unidades
 GET	/api/cardapio?unidadeId=1
 POST	/api/pedidos
 POST	/api/pagamentos/mock
-
 Documentação
-
 Requisitos
 
 Endpoints
