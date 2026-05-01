@@ -1,24 +1,42 @@
 # Raízes do Nordeste - Backend
 
-Trabalho final da disciplina Eletiva IV - Projeto Multidisciplinar de Análise e Desenvolvimento de Sistemas.
+Trabalho final da disciplina Eletiva IV - Projeto Multidisciplinar.
 
 **Autora:** Thais Rocha
-RU: 1393043
 
 ---
 
-## Status do Projeto
-✅ Concluído - API funcional
+## Status
+✅ API funcional
 
-## Tecnologias utilizadas
+## Tecnologias
 - Node.js
 - Express
-- SQLite (em memória)
-- JWT (autenticação)
-- bcryptjs
+- SQLite
 
-## Como executar o projeto
+## Como executar
 
-1. Clone o repositório:
 ```bash
 git clone https://github.com/Rocha-Thais/raizes-nordeste-backend.git
+cd raizes-nordeste-backend/backend/backend
+npm install
+node app.js
+
+Servidor: http://localhost:8080
+
+Endpoints principais
+Método	Rota
+GET	/api/unidades
+GET	/api/cardapio?unidadeId=1
+POST	/api/pedidos
+POST	/api/pagamentos/mock
+
+Documentação
+
+Requisitos
+
+Endpoints
+
+Testes
+
+Diagramas
