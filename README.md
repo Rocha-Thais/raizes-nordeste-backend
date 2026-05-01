@@ -1,21 +1,24 @@
 # Raízes do Nordeste - Backend
 
-Trabalho final da disciplina Eletiva IV - Projeto Multidisciplinar.
+Trabalho final da disciplina Eletiva IV - Projeto Multidisciplinar de Análise e Desenvolvimento de Sistemas.
+
+**Autora:** Thais Rocha
+RU: 1393043
+
+---
 
 ## Status do Projeto
-Em desenvolvimento
+✅ Concluído - API funcional
 
 ## Tecnologias utilizadas
-(a definir)
+- Node.js
+- Express
+- SQLite (em memória)
+- JWT (autenticação)
+- bcryptjs
 
 ## Como executar o projeto
-(instruções serão adicionadas após a implementação)
 
-## Documentação da API
-Swagger disponível em: (a definir)
-
-## Coleção Postman
-Arquivo: colecao.json (a ser adicionado)
-
-## Autor
-Thais Rocha
+1. Clone o repositório:
+```bash
+git clone https://github.com/Rocha-Thais/raizes-nordeste-backend.git
