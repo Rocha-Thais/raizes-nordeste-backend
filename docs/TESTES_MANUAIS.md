@@ -1,58 +1,25 @@
-# Evidências de Testes - API Raízes do Nordeste
+# Evidencias de Testes - API Raizes do Nordeste
+
+Testei no meu computador com o node rodando.
 
 ## Ambiente
-- Servidor local: http://localhost:8080
-- Banco: SQLite em memória (dados de exemplo)
+- Localhost:8080
+- Banco SQLite em memoria (só pra teste)
 
-## Testes realizados manualmente no navegador
+## Teste 1 - Listar unidades
+GET /api/unidades  
+Funcionou: apareceu a unidade de Recife que eu cadastrei.
 
-### Teste 1: Listar unidades
-- **Endpoint:** GET /api/unidades
-- **Resultado esperado:** Lista de unidades cadastradas
-- **Resultado obtido:** Sucesso (HTTP 200)
-```json
-[
-  {
-    "id": 1,
-    "nome": "Recife - Boa Viagem",
-    "endereco": "Av. Boa Viagem, 1000",
-    "cidade": "Recife",
-    "tipo_cozinha": "completa"
-  }
-]
+## Teste 2 - Cardapio por unidade
+GET /api/cardapio?unidadeId=1  
+Deu certo, mostrou a tapioca de carne seca.
 
-Teste 2: Listar cardápio por unidade
-- **Endpoint: GET /api/cardapio?unidadeId=1
+## Teste 3 - Criar pedido (POST)
+Testei pelo terminal porque o navegador nao deixa. O endpoint existe e retorna id_pedido.
 
-Resultado esperado: Lista de produtos da unidade
+## Teste 4 - Pagamento mock
+POST /api/pagamentos/mock  
+As vezes aprova, as vezes recusa (fiz um random). Funciona.
 
-Resultado obtido: Sucesso (HTTP 200)
-
-[
-  {
-    "id_produto": 1,
-    "nome": "Tapioca de Carne Seca",
-    "preco": 12.9,
-    "disponivel": 1
-  }
-]
-
-Teste 3: Criar pedido
-Endpoint: POST /api/pedidos
-
-Resultado esperado: Pedido criado com status 201
-
-Resultado obtido: Endpoint implementado. O servidor retorna id_pedido e status.
-
-Observação: Teste realizado via terminal/curl, pois o navegador não permite requisições POST diretamente.
-
-Teste 4: Pagamento mock
-Endpoint: POST /api/pagamentos/mock
-
-Resultado esperado: Aprovação ou recusa simulada
-
-Resultado obtido: Endpoint implementado. Retorna 80% de aprovação (simulação) ou recusa com status 400.
-
-Conclusão
-Todos os endpoints GET estão funcionando. Os endpoints POST (criar pedido e pagamento mock) estão implementados no código fonte. A API está estável e pronta para uso.
-
+## Conclusão
+A API ta rodando. Os endpoints principais tão ok. Deu pra testar sem grandes problemas.

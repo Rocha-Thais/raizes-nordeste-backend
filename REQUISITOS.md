@@ -1,79 +1,37 @@
 # REQUISITOS DO SISTEMA - RAÍZES DO NORDESTE
 
-## REQUISITOS FUNCIONAIS (RF)
+(versão simplificada e resumida)
 
-### RF01 - Cadastro e Autenticação de Usuários
-O sistema deve permitir cadastro de usuários com nome, email e senha (hash). Deve haver perfis: CLIENTE, ATENDENTE, COZINHA, GERENTE, ADMIN. Autenticação via JWT.
+## REQUISITOS FUNCIONAIS (o que o sistema faz)
 
-### RF02 - Gestão de Unidades
-O sistema deve permitir cadastrar, listar e consultar unidades da rede (nome, endereço, cidade, tipo de cozinha: completa/reduzida).
+RF01 - O usuario pode se cadastrar e fazer login (com email e senha). Tem perfis: cliente, atendente, cozinha, gerente e admin.
 
-### RF03 - Cardápio por Unidade
-O sistema deve permitir que cada unidade tenha seu próprio cardápio (produtos com nome, descrição, preço, disponibilidade sazonal – ex: período junino).
+RF02 - O gerente pode cadastrar as unidades da rede (nome, endereço, cidade, tipo de cozinha).
 
-### RF04 - Gestão de Pedidos (fluxo principal)
-O sistema deve permitir:
-- Criar pedido com itens (produtoId, quantidade, preço unitário)
-- Registrar canal de origem (APP, TOTEM, BALCAO, PICKUP, WEB) → obrigatório pelo roteiro
-- Atualizar status do pedido (AGUARDANDO_PAGAMENTO, PAGO, EM_PREPARO, PRONTO, ENTREGUE, CANCELADO)
-- Cancelar pedido
-- Consultar pedidos por unidade, canal, status, período
+RF03 - Cada unidade tem seu proprio cardapio. Produtos podem ser sazonais (ex: periodo junino).
 
-### RF05 - Controle de Estoque
-O sistema deve controlar estoque por unidade (entrada/saída de produtos). Deve impedir venda se produto estiver indisponível ou quantidade insuficiente.
+RF04 - O cliente faz pedido pelo APP, totem ou balcão. O pedido tem status (esperando pagamento, pago, preparando, pronto, entregue, cancelado). O pedido guarda o canal de origem (APP, TOTEM, BALCAO...).
 
-### RF06 - Programa de Fidelização
-O sistema deve permitir:
-- Cliente acumular pontos por valor gasto
-- Consultar saldo de pontos
-- Resgatar pontos (desconto/prêmio)
-- Registrar consentimento LGPD para participação
+RF05 - Controle de estoque por unidade. Se não tem estoque, não vende.
 
-### RF07 - Promoções e Campanhas
-O sistema deve permitir cadastrar promoções (ex: % de desconto, data válida, produtos aplicáveis). (Implementação mínima: regra/documentada)
+RF06 - Programa de fidelidade: acumula pontos por valor gasto. Precisa do consentimento do cliente (LGPD).
 
-### RF08 - Integração com Pagamento (Mock)
-O sistema deve solicitar pagamento a um serviço externo simulado (mock). Deve receber confirmação ou recusa e atualizar status do pedido.
+RF07 - Promoções podem ser cadastradas (ex: desconto em datas especiais).
 
-### RF09 - Multicanais (obrigatório)
-Todo pedido deve armazenar o campo `canalPedido`. A API deve permitir filtrar pedidos por canal via query param.
+RF08 - Pagamento é terceirizado (mock). A gente só recebe aprovado ou recusado.
 
-### RF10 - Auditoria e Logs
-O sistema deve registrar logs de ações sensíveis: criação de pedido, alteração de status, cancelamento, acesso a dados pessoais.
+RF09 - Todo pedido registra o canal (multicanais). Dá pra filtrar por canal na consulta.
 
+RF10 - Logs de ações importantes: criar pedido, cancelar, alterar status.
 
-## REQUISITOS NÃO FUNCIONAIS (RNF)
+## REQUISITOS NÃO FUNCIONAIS (qualidades)
 
-### RNF01 - Segurança e LGPD
-- Senhas devem ser armazenadas com hash (bcrypt ou similar)
-- Autenticação via JWT com expiração
-- Controle de acesso por perfil (role: CLIENTE, ATENDENTE, COZINHA, GERENTE, ADMIN)
-- Dados pessoais só podem ser acessados com consentimento explícito do cliente
-- Logs de acesso a dados sensíveis
-- Conformidade com LGPD: base legal, finalidade, consentimento registrado
-
-### RNF02 - Disponibilidade
-O sistema deve ter alta disponibilidade em horários de pico (07h-09h, 12h-14h, 18h-20h). Indisponibilidade não pode ultrapassar 0,1% ao mês.
-
-### RNF03 - Desempenho
-- Resposta da API deve ser < 2 segundos para 95% das requisições
-- Suporte a pelo menos 100 requisições simultâneas por unidade
-
-### RNF04 - Tolerância a Falhas
-- Falha no serviço de pagamento mock não deve cancelar o pedido automaticamente (retry ou fila)
-- Log de erros para auditoria
-
-### RNF05 - Documentação
-- API documentada com Swagger/OpenAPI
-- README com instruções claras de execução
-- Coleção Postman para testes
-
-### RNF06 - Rastreabilidade e Auditoria
-- Toda ação sensível deve ter log com: usuário, data, ação, dados afetados
-- Logs devem ser imutáveis e armazenados por pelo menos 6 meses
-
-### RNF07 - Escalabilidade
-Arquitetura deve permitir crescimento horizontal (múltiplas instâncias da API)
-
-### RNF08 - Manutenibilidade
-Código organizado em camadas (Domain, Application, Infrastructure, API)
+- Senhas em hash (bcrypt)
+- Login com JWT
+- Cada perfil tem sua permissão (ex: cliente não vê estoque)
+- LGPD: consentimento guardado
+- Disponibilidade alta em horários de pico
+- Resposta da API em menos de 2 segundos
+- Se o pagamento mock falhar, o pedido não é cancelado automaticamente
+- Documentação com Swagger e Postman (simplificado)
+- Código organizado em camadas (API, Application, Domain, Infrastructure)
