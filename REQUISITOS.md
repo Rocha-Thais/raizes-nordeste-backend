@@ -40,3 +40,40 @@ Todo pedido deve armazenar o campo `canalPedido`. A API deve permitir filtrar pe
 
 ### RF10 - Auditoria e Logs
 O sistema deve registrar logs de ações sensíveis: criação de pedido, alteração de status, cancelamento, acesso a dados pessoais.
+
+
+## REQUISITOS NÃO FUNCIONAIS (RNF)
+
+### RNF01 - Segurança e LGPD
+- Senhas devem ser armazenadas com hash (bcrypt ou similar)
+- Autenticação via JWT com expiração
+- Controle de acesso por perfil (role: CLIENTE, ATENDENTE, COZINHA, GERENTE, ADMIN)
+- Dados pessoais só podem ser acessados com consentimento explícito do cliente
+- Logs de acesso a dados sensíveis
+- Conformidade com LGPD: base legal, finalidade, consentimento registrado
+
+### RNF02 - Disponibilidade
+O sistema deve ter alta disponibilidade em horários de pico (07h-09h, 12h-14h, 18h-20h). Indisponibilidade não pode ultrapassar 0,1% ao mês.
+
+### RNF03 - Desempenho
+- Resposta da API deve ser < 2 segundos para 95% das requisições
+- Suporte a pelo menos 100 requisições simultâneas por unidade
+
+### RNF04 - Tolerância a Falhas
+- Falha no serviço de pagamento mock não deve cancelar o pedido automaticamente (retry ou fila)
+- Log de erros para auditoria
+
+### RNF05 - Documentação
+- API documentada com Swagger/OpenAPI
+- README com instruções claras de execução
+- Coleção Postman para testes
+
+### RNF06 - Rastreabilidade e Auditoria
+- Toda ação sensível deve ter log com: usuário, data, ação, dados afetados
+- Logs devem ser imutáveis e armazenados por pelo menos 6 meses
+
+### RNF07 - Escalabilidade
+Arquitetura deve permitir crescimento horizontal (múltiplas instâncias da API)
+
+### RNF08 - Manutenibilidade
+Código organizado em camadas (Domain, Application, Infrastructure, API)
