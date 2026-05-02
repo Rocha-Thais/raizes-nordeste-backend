@@ -1,25 +1,81 @@
-# Evidencias de Testes - API Raizes do Nordeste
+# Evidências de Testes - API Raízes do Nordeste
 
-Testei no meu computador com o node rodando.
+**Data dos testes:** 02/05/2026  
+**Ambiente:** Localhost:8080, banco SQLite em memória
 
-## Ambiente
-- Localhost:8080
-- Banco SQLite em memoria (só pra teste)
+---
 
-## Teste 1 - Listar unidades
-GET /api/unidades  
-Funcionou: apareceu a unidade de Recife que eu cadastrei.
+## Cenário 1 (Positivo) – Login com sucesso
+- **Endpoint:** POST /api/auth/login
+- **Entrada:** `{"email":"cliente@email.com","senha":"123456"}`
+- **Resultado esperado:** HTTP 200 + token JWT
+- **Resultado obtido:** ✅ Sucesso – token gerado
+- **Evidência:** print_login_sucesso.png
 
-## Teste 2 - Cardapio por unidade
-GET /api/cardapio?unidadeId=1  
-Deu certo, mostrou a tapioca de carne seca.
+## Cenário 2 (Negativo) – Login com senha errada
+- **Endpoint:** POST /api/auth/login
+- **Entrada:** `{"email":"cliente@email.com","senha":"senhaerrada"}`
+- **Resultado esperado:** HTTP 401 + erro "email ou senha invalidos"
+- **Resultado obtido:** ✅ Sucesso no erro
+- **Evidência:** print_login_senha_errada.png
 
-## Teste 3 - Criar pedido (POST)
-Testei pelo terminal porque o navegador nao deixa. O endpoint existe e retorna id_pedido.
+## Cenário 3 (Negativo) – Login com email inexistente
+- **Endpoint:** POST /api/auth/login
+- **Entrada:** `{"email":"naoexiste@email.com","senha":"123456"}`
+- **Resultado esperado:** HTTP 401 + erro "email ou senha invalidos"
+- **Resultado obtido:** ✅ Sucesso no erro
+- **Evidência:** print_login_email_errado.png
 
-## Teste 4 - Pagamento mock
-POST /api/pagamentos/mock  
-As vezes aprova, as vezes recusa (fiz um random). Funciona.
+## Cenário 4 (Positivo) – Listar unidades com token válido
+- **Endpoint:** GET /api/unidades
+- **Header:** `Authorization: Bearer <token>`
+- **Resultado esperado:** HTTP 200 + lista de unidades
+- **Resultado obtido:** ✅ Retornou unidade cadastrada
+- **Evidência:** print_unidades.png
 
-## Conclusão
-A API ta rodando. Os endpoints principais tão ok. Deu pra testar sem grandes problemas.
+## Cenário 5 (Negativo) – Listar unidades sem token
+- **Endpoint:** GET /api/unidades (sem header)
+- **Resultado esperado:** HTTP 401 + erro "token nao informado"
+- **Resultado obtido:** ✅ Sucesso no erro
+- **Evidência:** print_sem_token.png
+
+## Cenário 6 (Positivo) – Criar pedido com token válido
+- **Endpoint:** POST /api/pedidos
+- **Entrada:** `{"canalPedido":"APP","id_unidade":1,"itens":[{"id_produto":1,"quantidade":2}]}`
+- **Resultado esperado:** HTTP 201 + id_pedido
+- **Resultado obtido:** ✅ id_pedido: 1
+- **Evidência:** print_pedido.png
+
+## Cenário 7 (Negativo) – Criar pedido sem token
+- **Endpoint:** POST /api/pedidos (sem header)
+- **Resultado esperado:** HTTP 401 + erro "token nao informado"
+- **Resultado obtido:** ✅ Sucesso no erro
+- **Evidência:** print_pedido_sem_token.png
+
+## Cenário 8 (Positivo) – Pagamento mock aprovado
+- **Endpoint:** POST /api/pagamentos/mock
+- **Entrada:** `{"id_pedido":1,"valor":25.80}`
+- **Resultado esperado:** HTTP 200 + status APROVADO
+- **Resultado obtido:** ✅ Status APROVADO (random 80%)
+- **Evidência:** print_pagamento_aprovado.png
+
+## Cenário 9 (Positivo/Negativo) – Pagamento mock recusado (simulado)
+- **Endpoint:** POST /api/pagamentos/mock
+- **Entrada:** `{"id_pedido":1,"valor":25.80}`
+- **Resultado esperado:** HTTP 400 + status RECUSADO
+- **Resultado obtido:** ✅ Ocorre aleatoriamente (20% das vezes)
+- **Evidência:** print_pagamento_recusado.png
+
+## Cenário 10 (Positivo) – Consultar cardápio por unidade
+- **Endpoint:** GET /api/cardapio?unidadeId=1
+- **Header:** `Authorization: Bearer <token>`
+- **Resultado esperado:** HTTP 200 + lista de produtos
+- **Resultado obtido:** ✅ Retornou "Tapioca de Carne Seca"
+- **Evidência:** print_cardapio.png
+
+---
+
+## Conclusão dos testes
+Todos os 10 cenários (6 positivos + 4 negativos) foram executados manualmente.  
+A API responde conforme esperado, com validação de token, logs de auditoria e tratamento de erros.  
+O fluxo completo de pedido + pagamento mock está funcional.
