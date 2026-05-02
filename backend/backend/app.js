@@ -91,7 +91,7 @@ function verificarToken(req, res, next) {
   });
 }
 
-// ROTA DE LOGIN COM VALIDACAO DE SENHA
+// ROTA DE LOGIN COM VALIDACAO DE SENHA E LOG
 app.post('/api/auth/login', (req, res) => {
   const { email, senha } = req.body;
 
@@ -100,13 +100,17 @@ app.post('/api/auth/login', (req, res) => {
       return res.status(500).json({ erro: 'erro no servidor' });
     }
     if (!usuario) {
+      console.log(`[LOG] Login FALHOU - email nao encontrado: ${email} - ${new Date().toISOString()}`);
       return res.status(401).json({ erro: 'email ou senha invalidos' });
     }
 
     const senhaValida = bcrypt.compareSync(senha, usuario.senha_hash);
     if (!senhaValida) {
+      console.log(`[LOG] Login FALHOU - senha incorreta para: ${email} - ${new Date().toISOString()}`);
       return res.status(401).json({ erro: 'email ou senha invalidos' });
     }
+
+    console.log(`[LOG] Login SUCESSO: ${email} - ${new Date().toISOString()}`);
 
     const token = jwt.sign(
       { id: usuario.id, email: usuario.email, role: usuario.role },
@@ -117,7 +121,8 @@ app.post('/api/auth/login', (req, res) => {
   });
 });
 
-// ENDPOINTS PROTEGIDOS COM MIDDLEWARE
+// ENDPOINTS PROTEGIDOS COM MIDDLEWARE E LOGS
+
 app.get('/api/unidades', verificarToken, (req, res) => {
   db.all('SELECT * FROM unidades', [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -143,6 +148,8 @@ app.post('/api/pedidos', verificarToken, (req, res) => {
   const data_hora = new Date().toISOString();
   const valor_total = itens.reduce((sum, item) => sum + (item.quantidade * 10), 0);
 
+  console.log(`[LOG] Pedido criado por ${req.usuario.email} | canal: ${canalPedido} | unidade: ${id_unidade} - ${new Date().toISOString()}`);
+
   db.run(`INSERT INTO pedidos (id_cliente, id_unidade, canal_pedido, status, data_hora, valor_total)
           VALUES (1, ?, ?, ?, ?, ?)`,
     [id_unidade, canalPedido, status, data_hora, valor_total],
@@ -156,8 +163,10 @@ app.post('/api/pagamentos/mock', verificarToken, (req, res) => {
   const { id_pedido, valor } = req.body;
   const aprovado = Math.random() > 0.2;
   if (aprovado) {
+    console.log(`[LOG] Pagamento APROVADO | pedido ${id_pedido} | valor ${valor} - ${new Date().toISOString()}`);
     res.json({ status: 'APROVADO', transacaoId: 'mock_' + Date.now() });
   } else {
+    console.log(`[LOG] Pagamento RECUSADO | pedido ${id_pedido} | valor ${valor} - ${new Date().toISOString()}`);
     res.status(400).json({ status: 'RECUSADO', motivo: 'saldo insuficiente' });
   }
 });
