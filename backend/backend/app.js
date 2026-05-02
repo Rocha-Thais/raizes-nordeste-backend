@@ -13,7 +13,7 @@ app.use(express.json());
 
 const db = new sqlite3.Database(':memory:');
 
-// criando as tabelas
+// criando as tabelas (feito em 01/05)
 db.serialize(() => {
   db.run(`CREATE TABLE usuarios (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -73,7 +73,25 @@ db.serialize(() => {
     (1, 1, 12.90, 1)`);
 });
 
-// ROTA DE LOGIN com validacao de senha
+// MIDDLEWARE PRA VALIDAR TOKEN - adicionado em 02/05
+function verificarToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ erro: 'token nao informado' });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ erro: 'token invalido ou expirado' });
+    }
+    req.usuario = decoded;
+    next();
+  });
+}
+
+// ROTA DE LOGIN COM VALIDACAO DE SENHA
 app.post('/api/auth/login', (req, res) => {
   const { email, senha } = req.body;
 
@@ -99,15 +117,15 @@ app.post('/api/auth/login', (req, res) => {
   });
 });
 
-// ENDPOINTS
-app.get('/api/unidades', (req, res) => {
+// ENDPOINTS PROTEGIDOS COM MIDDLEWARE
+app.get('/api/unidades', verificarToken, (req, res) => {
   db.all('SELECT * FROM unidades', [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
   });
 });
 
-app.get('/api/cardapio', (req, res) => {
+app.get('/api/cardapio', verificarToken, (req, res) => {
   const unidadeId = req.query.unidadeId;
   db.all(`
     SELECT p.id as id_produto, p.nome, c.preco_atual as preco, c.disponivel 
@@ -119,7 +137,7 @@ app.get('/api/cardapio', (req, res) => {
   });
 });
 
-app.post('/api/pedidos', (req, res) => {
+app.post('/api/pedidos', verificarToken, (req, res) => {
   const { canalPedido, id_unidade, itens } = req.body;
   const status = 'AGUARDANDO_PAGAMENTO';
   const data_hora = new Date().toISOString();
@@ -134,7 +152,7 @@ app.post('/api/pedidos', (req, res) => {
     });
 });
 
-app.post('/api/pagamentos/mock', (req, res) => {
+app.post('/api/pagamentos/mock', verificarToken, (req, res) => {
   const { id_pedido, valor } = req.body;
   const aprovado = Math.random() > 0.2;
   if (aprovado) {
