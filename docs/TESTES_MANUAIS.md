@@ -73,6 +73,13 @@
 - **Resultado obtido:** ✅ Retornou "Tapioca de Carne Seca"
 - **Evidência:** print_cardapio.png
 
+## Cenário 11 (Negativo) – Estoque insuficiente (simulado)
+- **Endpoint:** POST /api/pedidos
+- **Entrada:** Produto com quantidade maior que o estoque disponível
+- **Resultado esperado:** HTTP 409 + erro de conflito
+- **Resultado obtido:** ⚠️ Não implementado completamente por falta de tempo, mas a regra foi modelada. Ficaria como melhoria futura.
+- **Evidência:** Simulado – o código atual permite vender mesmo sem estoque.
+
 ---
 
 ## Conclusão dos testes
