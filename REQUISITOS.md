@@ -36,7 +36,15 @@ RF10 - Logs de ações importantes: criar pedido, cancelar, alterar status.
 - Documentação com Swagger e Postman (simplificado)
 - Código organizado em camadas (API, Application, Domain, Infrastructure)
 
-## Priorização (feita em 02/05)
-- Priorizei o fluxo de pedido com pagamento mock porque é o mais crítico pro negócio.
-- LGPD foi priorizada porque a empresa pediu explicitamente.
-- Estoque ficou simples (só impede venda se não tiver) porque daria muito tempo pra implementar completo.
+
+## Priorização e Justificativa (feito em 03/05)
+
+Nem todos os requisitos foram implementados completamente por causa do tempo. Eu priorizei o que era mais importante pro negócio:
+
+- **Fluxo de pedido com pagamento mock**: foi priorizado porque é o coração do sistema. Sem ele a lanchonete não funciona.
+- **LGPD e consentimento**: coloquei como prioridade porque a empresa pediu explicitamente no estudo de caso.
+- **Multicanais (canalPedido)**: implementei porque é obrigatório no roteiro e dá pra rastrear de onde vem o pedido.
+- **Autenticação JWT e logs**: fiz o mínimo mas funcionam. Os logs ajudam na auditoria.
+- **Estoque**: ficou simples (só impede venda se não tiver). Não deu tempo de fazer entrada/saída completa.
+- **Fidelidade**: modelei no DER e nas classes, mas não implementei os endpoints. Ficou como melhoria futura.
+
