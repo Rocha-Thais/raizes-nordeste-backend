@@ -188,6 +188,26 @@ app.post('/api/pagamentos/mock', verificarToken, (req, res) => {
   }
 });
 
+// ENDPOINT PRA LISTAR PEDIDOS COM FILTRO POR CANAL
+// feito em 03/05 - Thais
+app.get('/api/pedidos', verificarToken, (req, res) => {
+  const canal = req.query.canalPedido;
+  let sql = 'SELECT * FROM pedidos';
+  let params = [];
+
+  if (canal) {
+    sql += ' WHERE canal_pedido = ?';
+    params.push(canal);
+  }
+
+  db.all(sql, params, (err, rows) => {
+    if (err) {
+      return erroPadrao(res, 500, 'erro ao buscar pedidos');
+    }
+    res.json(rows);
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
