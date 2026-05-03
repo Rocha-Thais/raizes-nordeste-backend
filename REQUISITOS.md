@@ -35,3 +35,8 @@ RF10 - Logs de ações importantes: criar pedido, cancelar, alterar status.
 - Se o pagamento mock falhar, o pedido não é cancelado automaticamente
 - Documentação com Swagger e Postman (simplificado)
 - Código organizado em camadas (API, Application, Domain, Infrastructure)
+
+## Priorização (feita em 02/05)
+- Priorizei o fluxo de pedido com pagamento mock porque é o mais crítico pro negócio.
+- LGPD foi priorizada porque a empresa pediu explicitamente.
+- Estoque ficou simples (só impede venda se não tiver) porque daria muito tempo pra implementar completo.
