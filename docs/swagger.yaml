@@ -1,0 +1,100 @@
+openapi: 3.0.0
+info:
+  title: API Raizes do Nordeste
+  description: API para gerenciamento de pedidos da rede de lanchonetes
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /auth/login:
+    post:
+      summary: Faz login e retorna token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                senha:
+                  type: string
+      responses:
+        '200':
+          description: Login ok
+        '401':
+          description: Email ou senha invalido
+  /unidades:
+    get:
+      summary: Lista todas as unidades
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de unidades
+        '401':
+          description: Token nao informado
+  /cardapio:
+    get:
+      summary: Cardapio por unidade
+      parameters:
+        - name: unidadeId
+          in: query
+          required: true
+          schema:
+            type: integer
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Lista de produtos
+  /pedidos:
+    post:
+      summary: Cria novo pedido (precisa de token)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                canalPedido:
+                  type: string
+                id_unidade:
+                  type: integer
+                itens:
+                  type: array
+      responses:
+        '201':
+          description: Pedido criado
+        '401':
+          description: Token invalido
+  /pagamentos/mock:
+    post:
+      summary: Simula pagamento (mock)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id_pedido:
+                  type: integer
+                valor:
+                  type: number
+      responses:
+        '200':
+          description: Pagamento aprovado
+        '400':
+          description: Pagamento recusado
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
