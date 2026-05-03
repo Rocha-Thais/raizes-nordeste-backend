@@ -100,6 +100,14 @@ function verificarToken(req, res, next) {
   });
 }
 
+// funcao pra verificar se o usuario é admin - feito em 03/05
+function verificarAdmin(req, res, next) {
+  if (req.usuario.role !== 'ADMIN') {
+    return erroPadrao(res, 403, 'acesso negado - precisa ser admin');
+  }
+  next();
+}
+
 // ROTA DE LOGIN COM VALIDACAO DE SENHA E LOG
 app.post('/api/auth/login', (req, res) => {
   const { email, senha } = req.body;
@@ -132,7 +140,7 @@ app.post('/api/auth/login', (req, res) => {
 
 // ENDPOINTS PROTEGIDOS COM MIDDLEWARE E LOGS
 
-app.get('/api/unidades', verificarToken, (req, res) => {
+app.get('/api/unidades', verificarToken, verificarAdmin, (req, res) => {
   db.all('SELECT * FROM unidades', [], (err, rows) => {
     if (err) return erroPadrao(res, 500, err.message);
     res.json(rows);
