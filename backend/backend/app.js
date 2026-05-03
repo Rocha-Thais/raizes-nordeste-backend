@@ -13,6 +13,15 @@ app.use(express.json());
 
 const db = new sqlite3.Database(':memory:');
 
+// funcao padrao pra errors (feito em 03/05)
+function erroPadrao(res, status, mensagem) {
+  return res.status(status).json({
+    erro: mensagem,
+    status: status,
+    timestamp: new Date().toISOString()
+  });
+}
+
 // criando as tabelas (feito em 01/05)
 db.serialize(() => {
   db.run(`CREATE TABLE usuarios (
@@ -79,12 +88,12 @@ function verificarToken(req, res, next) {
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ erro: 'token nao informado' });
+    return erroPadrao(res, 401, 'token nao informado');
   }
 
   jwt.verify(token, SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(403).json({ erro: 'token invalido ou expirado' });
+      return erroPadrao(res, 403, 'token invalido ou expirado');
     }
     req.usuario = decoded;
     next();
@@ -97,11 +106,11 @@ app.post('/api/auth/login', (req, res) => {
 
   db.get('SELECT * FROM usuarios WHERE email = ?', [email], (err, usuario) => {
     if (err) {
-      return res.status(500).json({ erro: 'erro no servidor' });
+      return erroPadrao(res, 500, 'erro no servidor');
     }
     if (!usuario) {
       console.log(`[LOG] Login FALHOU - email nao encontrado: ${email} - ${new Date().toISOString()}`);
-      return res.status(401).json({ erro: 'email ou senha invalidos' });
+      return erroPadrao(res, 401, 'email ou senha invalidos');
     }
 
     const senhaValida = bcrypt.compareSync(senha, usuario.senha_hash);
@@ -125,7 +134,7 @@ app.post('/api/auth/login', (req, res) => {
 
 app.get('/api/unidades', verificarToken, (req, res) => {
   db.all('SELECT * FROM unidades', [], (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
+    if (err) return erroPadrao(res, 500, err.message);
     res.json(rows);
   });
 });
@@ -167,7 +176,7 @@ app.post('/api/pagamentos/mock', verificarToken, (req, res) => {
     res.json({ status: 'APROVADO', transacaoId: 'mock_' + Date.now() });
   } else {
     console.log(`[LOG] Pagamento RECUSADO | pedido ${id_pedido} | valor ${valor} - ${new Date().toISOString()}`);
-    res.status(400).json({ status: 'RECUSADO', motivo: 'saldo insuficiente' });
+    return erroPadrao(res, 400, 'pagamento recusado - saldo insuficiente');
   }
 });
 
